@@ -22,8 +22,4 @@ public class TestBash {
         parser = new Parser(new Environment());
         env = new Environment();
     }
-
-    @Test
-    public void testAdd() {
-    }
 }
