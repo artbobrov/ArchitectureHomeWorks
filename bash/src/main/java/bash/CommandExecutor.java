@@ -66,6 +66,7 @@ public class CommandExecutor {
         }
 
         File dir = new File(path);
+
         for(String child: Objects.requireNonNull(dir.list())){
             System.out.println(child);
         }
