@@ -53,6 +53,7 @@ public class CommandExecutor {
         }
     }
 
+    // Выполняет команду cd. Принимает 0 или 1 аргумент. Если 0 аргументов, то выводится содержиное текущей директории.
     public String executeLs(String[] args) {
         if (args.length > 1) {
             return "error arguments for ls";
@@ -72,6 +73,7 @@ public class CommandExecutor {
         return "";
     }
 
+    // Выполняет команду cd. Принимает ровно 1 аргумент
     public String executeCd(String[] args) {
         if (args.length != 1) {
             return "error arguments for cd";
