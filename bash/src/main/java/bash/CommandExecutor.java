@@ -35,6 +35,10 @@ public class CommandExecutor {
                 return executeExit(args);
             case ("grep"):
                 return executeGrep(args, resultOfLastCommand, pipePosition);
+            case ("ls"):
+                return executeLs(args);
+            case ("cd"):
+                return executeCd(args);
             default:
                 String newCommand = command + " ";
                 if (args.length == 0 & pipePosition > 1) {
@@ -46,6 +50,39 @@ public class CommandExecutor {
                 }
                 return executeOtherCommand(newCommand);
         }
+    }
+
+    public String executeLs(String[] args) {
+        if (args.length > 1) {
+            return "error arguments for ls";
+        }
+        String path;
+        if (args.length == 0) {
+            path = System.getProperty("user.dir");
+        } else {
+            path = args[0];
+        }
+
+        File dir = new File(path);
+        for(String child: dir.list()){
+            System.out.println(child);
+        }
+
+        return "";
+    }
+
+    public String executeCd(String[] args) {
+        if (args.length != 1) {
+            return "error arguments for cd";
+        }
+        File dir = new File(args[0]);
+
+        if (dir.isDirectory()) {
+            System.setProperty("user.dir", dir.getAbsolutePath());
+        } else {
+            return "error arguments for cd " + args[0] + " is not a directory.";
+        }
+        return "";
     }
 
     // Выполняет команду cat. Если команда не первая в очереди pipe и у нее нет аргументов -- то
