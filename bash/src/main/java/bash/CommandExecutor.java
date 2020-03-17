@@ -66,12 +66,12 @@ public class CommandExecutor {
         }
 
         File dir = new File(path);
-
+        StringBuilder builder = new StringBuilder();
         for(String child: Objects.requireNonNull(dir.list())){
-            System.out.println(child);
+            builder.append(child);
         }
 
-        return "";
+        return builder.toString();
     }
 
     // Выполняет команду cd. Принимает ровно 1 аргумент
