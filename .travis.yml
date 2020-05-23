@@ -22,7 +22,6 @@ before_install:
   - gradle wrapper
 
 script:
-  - cd bash
   - ./gradlew --version
   - ./gradlew check
   - ./gradlew clean test
