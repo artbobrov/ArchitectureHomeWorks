@@ -4,6 +4,7 @@ import org.apache.commons.cli.*;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -12,8 +13,8 @@ import java.util.regex.Pattern;
 // CommandExecutor исполняет команды
 public class CommandExecutor {
 
-    private Parser parser;
-    private CommandLine commandL;
+    private final Parser parser;
+    private final CommandLine commandL;
 
     // конструктор
     public CommandExecutor(CommandLine cl) {
@@ -56,35 +57,37 @@ public class CommandExecutor {
     // Выполняет команду cd. Принимает 0 или 1 аргумент. Если 0 аргументов, то выводится содержиное текущей директории.
     public String executeLs(String[] args) {
         if (args.length > 1) {
-            return "error arguments for ls";
+            return "error: arguments for ls";
         }
         String path;
         if (args.length == 0) {
-            path = System.getProperty("user.dir");
+            path = "";
         } else {
             path = args[0];
         }
 
-        File dir = new File(path);
-        StringBuilder builder = new StringBuilder();
-        for(String child: Objects.requireNonNull(dir.list())){
-            builder.append(child);
-        }
+        File dir = createFile(path);
+        String[] dirList = dir.list();
+        if (dirList == null)
+            return "error: invalid path";
 
-        return builder.toString();
+        final List<String> strings = new ArrayList<>(Arrays.asList(dirList));
+        return String.join("\n", strings);
     }
 
     // Выполняет команду cd. Принимает ровно 1 аргумент
-    public String executeCd(String[] args) {
+    public String executeCd(String[] args) throws IOException {
         if (args.length != 1) {
-            return "error arguments for cd";
+            return "error: arguments for cd";
         }
-        File dir = new File(args[0]);
+        File dir = createFile(args[0]);
 
+        if (!dir.exists())
+            return "error:" + dir + " does not exists";
         if (dir.isDirectory()) {
-            System.setProperty("user.dir", dir.getAbsolutePath());
+            System.setProperty("user.dir", dir.getCanonicalPath());
         } else {
-            return "error arguments for cd " + args[0] + " is not a directory.";
+            return "error: arguments for cd " + args[0] + " is not a directory.";
         }
         return "";
     }
@@ -98,7 +101,7 @@ public class CommandExecutor {
         if (args.length < 1) {
             return "error arguments for cat";
         }
-        File file = new File(args[0]);
+        File file = createFile(args[0]);
         String result = "";
         BufferedReader reader = null;
         try {
@@ -157,13 +160,13 @@ public class CommandExecutor {
                 String[] splits = parser.splitByWhitespace(str);
                 wordsCount += splits.length;
             }
-            result = result + String.valueOf(linesCount) + " " + String.valueOf(wordsCount) + " " + String.valueOf(bytesCount);
+            result = result + linesCount + " " + wordsCount + " " + bytesCount;
             return result;
         }
         if (args.length < 1) {
             return "error arguments for wc";
         }
-        File file = new File(args[0]);
+        File file = createFile(args[0]);
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new FileReader(file));
@@ -190,13 +193,13 @@ public class CommandExecutor {
             } catch (IOException e) {
             }
         }
-        result = result + String.valueOf(linesCount) + " " + String.valueOf(wordsCount) + " " + String.valueOf(bytesCount);
+        result = result + linesCount + " " + wordsCount + " " + bytesCount;
         return result;
     }
 
     // Выполняет команду pwd
     public String executePwd(String[] args) {
-        return new File("").getAbsolutePath();
+        return System.getProperty("user.dir");
     }
 
     // Выполняет команду exit.
@@ -252,7 +255,7 @@ public class CommandExecutor {
             if (cmd.getArgs().length != 2) {
                 return "error args for grep";
             }
-            File file = new File(cmd.getArgs()[1]);
+            File file = createFile(cmd.getArgs()[1]);
             BufferedReader reader = null;
             try {
                 reader = new BufferedReader(new FileReader(file));
@@ -347,5 +350,10 @@ public class CommandExecutor {
         }
 
         return result;
+    }
+
+    private File createFile(String path) {
+        String currentDir = System.getProperty("user.dir");
+        return new File(currentDir, path);
     }
 }

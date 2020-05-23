@@ -7,8 +7,8 @@ import java.util.Scanner;
 public class CommandLine {
 
     private boolean execute;
-    private Environment environment;
-    private LinesExecutor linesExec;
+    private final Environment environment;
+    private final LinesExecutor linesExec;
 
     // конструктор
     public CommandLine() {

@@ -6,7 +6,7 @@ import java.util.List;
 // Parser обрабатывает строки по определенным правилам.
 public class Parser {
 
-    private Environment environment;
+    private final Environment environment;
 
     // конструктор
     public Parser(Environment env) {

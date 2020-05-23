@@ -6,7 +6,7 @@ import java.util.HashMap;
 // умеет их добавлять, удалять и возвращать значение
 public class Environment {
 
-    private HashMap<String, String> variables;
+    private final HashMap<String, String> variables;
 
     // конструктор
     public Environment() {
@@ -20,9 +20,7 @@ public class Environment {
 
     // удаляет переменную по её имени
     public void removeVar(String var) {
-        if (variables.containsKey(var)) {
-            variables.remove(var);
-        }
+        variables.remove(var);
     }
 
     // возвращает значение переменной
