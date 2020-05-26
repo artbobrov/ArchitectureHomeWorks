@@ -3,12 +3,12 @@ package bash;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class TestBash {
 
@@ -21,5 +21,23 @@ public class TestBash {
         cl = new CommandLine();
         parser = new Parser(new Environment());
         env = new Environment();
+    }
+
+    @Test
+    public void testLsCommand() throws IOException {
+        CommandExecutor executor = new CommandExecutor(cl);
+
+        String result = executor.executeCommand("ls", new String[0], "", 0);
+        assertFalse(result.isEmpty());
+        assertFalse(result.contains("error:"));
+    }
+
+
+    @Test
+    public void testCDCommand() throws IOException {
+        CommandExecutor executor = new CommandExecutor(cl);
+
+        String result = executor.executeCommand("cd", Collections.singletonList("/").toArray(new String[0]), "", 0);
+        assertTrue(result.isEmpty());
     }
 }

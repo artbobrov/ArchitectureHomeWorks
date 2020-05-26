@@ -8,8 +8,8 @@ import java.util.Arrays;
 // перед тем как отдать команды исполнителю команд.
 public class LinesExecutor {
 
-    private Parser parser;
-    private CommandExecutor command;
+    private final Parser parser;
+    private final CommandExecutor command;
 
     // конструктор
     public LinesExecutor(Environment env, CommandLine cl) {
